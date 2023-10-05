@@ -1,19 +1,17 @@
 #!/usr/bin/python3
+# lockboxes
 
 def canUnlockAll(boxes):
-    if not boxes:
-        return False
+    x = len(boxes)
+    item = [False] * x
+    item[0] = True
+    stack = [0]
 
-    n = len(boxes)
-    visited = [False] * n
-    keys = [0]  # Start with the key for box 0
+    while stack:
+        box = stack.pop()
+        for each in boxes[box]:
+            if each >= 0 and each < x and not item[each]:
+                item[each] = True
+                stack.append(each)
 
-    while keys:
-        current_box = keys.pop()
-        visited[current_box] = True
-
-        for key in boxes[current_box]:
-            if key >= 0 and key < n and not visited[key]:
-                keys.append(key)
-
-    return all(visited)
+    return all(item)
