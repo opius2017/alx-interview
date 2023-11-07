@@ -17,21 +17,27 @@ request(filmURL + filmNum, async (err, res, body) => {
   // Find URLs of each character in the film as a list obj
   const charURLList = JSON.parse(body).characters;
 
-  // Use URL list to character pages to make new requests
-  for (const charURL of charURLList) {
-    await new Promise((resolve, reject) => {
-      request(charURL, (err, res, body) => {
-        if (err) return console.error(err);
+  // Function to make requests in order
+  const getCharacter = (charURL) => {
+    request(charURL, (err, res, body) => {
+      if (err) return console.error(err);
 
-        // Find each character name
-        request(JSON.parse(body).name, (err, res, body) => {
-          if (err) return console.error(err);
+      // Find each character name
+      const character = JSON.parse(body);
+      console.log(character.name);
 
-          // Print the character name
-          console.log(body);
-          resolve();
-        });
-      });
+      // Move to the next character, if available
+      const nextCharacterURL = charURLList.shift();
+      if (nextCharacterURL) {
+        getCharacter(nextCharacterURL);
+      }
     });
+  };
+
+  // Start the process with the first character
+  const firstCharacterURL = charURLList.shift();
+  if (firstCharacterURL) {
+    getCharacter(firstCharacterURL);
   }
 });
+
