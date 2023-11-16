@@ -12,12 +12,19 @@ def rotate_2d_matrix(matrix):
 
     n = len(matrix)
 
+    # Create an empty matrix to store the rotated result
+    rotated_matrix = [[0] * n for _ in range(n)]
+
     for i in range(n):
-        for j in range(n - 1, -1, -1):
-            matrix[j].append(matrix[i].pop(0))
+        for j in range(n):
+            rotated_matrix[j][n - 1 - i] = matrix[i][j]
+
+    # Update the original matrix with the rotated result
+    for i in range(n):
+        for j in range(n):
+            matrix[i][j] = rotated_matrix[i][j]
 
 # Test case
-
 
 if __name__ == "__main__":
     matrix = [[1, 2, 3],
